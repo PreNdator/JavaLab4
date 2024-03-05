@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.math.BigDecimal;
 
 public class EmployeeReader {
     public ArrayList<Employee> readEmployeesFromCSV(String csvFilePath, char separator) {
@@ -16,8 +17,16 @@ public class EmployeeReader {
                     .withCSVParser(new CSVParserBuilder().withSeparator(separator).build())
                     .build()) {
                 String[] nextLine;
+                reader.readNext();
                 while ((nextLine = reader.readNext()) != null) {
-
+                    int id = Integer.parseInt(nextLine[0]);
+                    String name = nextLine[1];
+                    String gender = nextLine[2];
+                    String birthDate = nextLine[3];
+                    Division division = Division.GetDivision(nextLine[4]);
+                    BigDecimal salary = new BigDecimal(nextLine[5]);
+                    Employee employee = new Employee(id, name, gender, division, salary, birthDate);
+                    employees.add(employee);
                 }
             }
         } catch (IOException | CsvValidationException e) {
@@ -25,6 +34,5 @@ public class EmployeeReader {
         }
         return employees;
     }
-
 
 }
